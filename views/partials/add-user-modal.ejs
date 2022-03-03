@@ -1,0 +1,103 @@
+<div class="modal-wrapper" id="add-user-modal">
+    <div class="modal">
+        <a href="#" onclick="closeModal()" class="modal-close">+</a>
+        <div class="modal-title">
+            <h2>Create New User</h2>
+        </div>
+        <div class="modal-body">
+            <form id="add-user-form" action="/users" method="POST" enctype="multipart/form-data">
+                <input type="text" placeholder="enter name" name="name" id="name" value="Taher" />
+                <p class="error name-error"></p>
+                <input type="text" placeholder="enter email" name="email" id="email" value="abutaher@gmail.com" />
+                <p class="error email-error"></p>
+                <input type="text" placeholder="enter mobile" name="mobile" id="mobile" value="+8801962054584" />
+                <p class="error mobile-error"></p>
+                <input type="password" placeholder="enter password" name="password" id="password"
+                    value="Ja@634343454" />
+                <p class="error password-error"></p>
+                <input type="file" name="avatar" id="avatar" />
+                <p class="error avatar-error"></p>
+
+                <p class="error common-error"></p>
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const modal = document.querySelector("#add-user-modal");
+    window.onload = function () {
+
+        const successToast = (msg) => Toastify({
+            text: msg,
+            duration: 1500,
+        })
+        const myform = document.querySelector("#add-user-form");
+        myform.onsubmit = function (e) {
+            e.preventDefault();
+
+            //clear error first
+            const errPlaceholders = document.querySelectorAll('p.error');
+            for (let i = 0; i < errPlaceholders.length; i++) {
+                errPlaceholders[i].style.display = "none";
+            }
+
+            //input err clear
+            const errInput = document.querySelectorAll('input.error');
+            for (let j = 0; j < errInput.length; j++) {
+                errInput[j].classList.remove("error");
+            }
+            const formData = new FormData(myform);
+
+            fetch('/users', {
+                method: 'POST', // or 'PUT'
+                body: formData,
+                mode: "cors"
+            })
+                .then(response => response.json())
+                .then(res => {
+                    if (res.errors) {
+                        Object.keys(res.errors).forEach((fileName) => {
+                            myform[fileName].classList.add("error");
+                            const errorPlaceholder = document.querySelector(`.${fileName}-error`);
+                            errorPlaceholder.textContent = res.errors[fileName].msg;
+                            errorPlaceholder.style.display = "block";
+                        });
+                        if (res.errors['avatar']) {
+                            document.getElementById("avatar").value = "";
+                        }
+
+                    } else {
+                        successToast(res.message).showToast();
+                        // closeModal();
+                        document.querySelector('p.error').style.display = "none";
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                })
+        }
+        document.querySelector('#avatar').addEventListener('change', function () {
+            if (this.files[0].size > 1048576) {
+                const eP = document.querySelector(`.avatar-error`);
+                this.classList.add("error");
+                eP.textContent = `${(this.files[0].size / 1048576).toFixed(2)}, Uploaded file size over 1Mb file limit`;
+                eP.style.display = "block";
+                this.value = "";
+                setTimeout(() => {
+                    this.classList.remove("error");
+                    eP.style.display = "none";
+                }, 3500);
+            }
+        });
+
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+    }
+    function openModal() {
+        modal.style.display = "block";
+    }
+</script>

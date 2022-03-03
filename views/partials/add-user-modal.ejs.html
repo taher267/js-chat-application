@@ -1,0 +1,64 @@
+<div class="modal-wrapper" id="add-user-modal">
+    <div class="modal">
+        <a href="#" onclick="closeModal()" class="modal-close">+</a>
+        <div class="modal-title">
+            <h2>Create New User</h2>
+        </div>
+        <div class="modal-body">
+            <form id="add-user-form" action="/users" method="POST">
+                <input type="text" placeholder="enter name" name="name" />
+                <p class="error name-error"></p>
+                <input type="text" placeholder="enter email" name="email" />
+                <p class="error email-error"></p>
+                <input type="text" placeholder="enter mobile" name="mobile" />
+                <p class="error mobile-error"></p>
+                <input type="password" placeholder="enter password" name="password" />
+                <p class="error password-error"></p>
+                <!-- <input type="file" name="avatar" /> -->
+                <p class="error avatar-error"></p>
+
+                <p class="error common-error"></p>
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const modal = document.querySelector("#add-user-modal");
+    const form = document.querySelector("#add-user-form");
+    // window.onload = function () {
+
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        // let response = await fetch("/users", {
+        //     method: "POST",
+        //     body: formData
+        // });
+        // let result = await response.json();
+        // console.log(result.errors);
+        fetch('/users', {
+            method: 'POST', // or 'PUT'
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+    }
+    function openModal() {
+        modal.style.display = "block";
+    }
+</script>

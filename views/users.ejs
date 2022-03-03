@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+    <div class="manageUser-container">
+        <div id="title">
+            <h2>Manage Users</h2>
+        </div>
+
+        <div class="new-message-container new-user">
+            <a href="#" onclick="openModal()">+</a>
+        </div>
+
+        <div id="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Manage</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table">
+                    <tr id="">
+                        <td class="name">
+                            <img src="./assets/images/user1.png" />
+                            <span>User 1</span>
+                        </td>
+                        <td>email@email.com</td>
+                        <td class="manage">
+                            <img src="./assets/images/trash.png" alt="Delete" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <style>
+        .test-wrap div p {
+            display: inline-block;
+            border-right: 1px solid beige;
+
+        }
+    </style>
+    <div class="test-wrap">
+
+        <div>
+            <p class="st-sp">One</p>
+            <p>eleven</p>
+        </div>
+        <div>
+            <p class="st-sp">eleven</p>
+            <p>3</p>
+        </div>
+        <div>
+            <p class="st-sp">fkdjskfjsdklfjkasdfj</p>
+            <p>3</p>
+        </div>
+    </div>
+    <%- include('partials/add-user-modal') %>
+        </body>
+
+        </html>
