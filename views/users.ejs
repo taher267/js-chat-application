@@ -17,44 +17,69 @@
                         <th>Manage</th>
                     </tr>
                 </thead>
+
                 <tbody id="users-table">
-                    <tr id="">
-                        <td class="name">
-                            <img src="./assets/images/user1.png" />
-                            <span>User 1</span>
-                        </td>
-                        <td>email@email.com</td>
-                        <td class="manage">
-                            <img src="./assets/images/trash.png" alt="Delete" />
-                        </td>
-                    </tr>
+                    <%if(users&&users.length>0){%>
+                        <% for(user of users){%>
+                            <tr id="<%=user.id%>">
+                                <td class="name">
+                                    <img src="<%=`/uploads/avatars/${user.avatar}`%>"
+                                        alt="profile pic of <%=user.name %>" />
+                                    <span>
+                                        <%=user.name %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <%=user.email %>
+                                </td>
+                                <td class="manage">
+                                    <img class="delete" src="./assets/images/trash.png"
+                                        onclick='delUser("<%=user.id %>")' alt="Delete" />
+                                </td>
+                            </tr>
+                            <% } %>
+                                <%} else{ %>
+                                    <td colspan="3">
+                                        <h3>There is no user!</h3>
+                                    </td>
+                                    <%}%>
                 </tbody>
+
             </table>
         </div>
     </div>
-    <style>
-        .test-wrap div p {
-            display: inline-block;
-            border-right: 1px solid beige;
-
-        }
-    </style>
-    <div class="test-wrap">
-
-        <div>
-            <p class="st-sp">One</p>
-            <p>eleven</p>
-        </div>
-        <div>
-            <p class="st-sp">eleven</p>
-            <p>3</p>
-        </div>
-        <div>
-            <p class="st-sp">fkdjskfjsdklfjkasdfj</p>
-            <p>3</p>
-        </div>
-    </div>
     <%- include('partials/add-user-modal') %>
+        <script>
+
+            // const imgs = document.querySelectorAll('.manage .delete');
+            // imgs.forEach((user, i) => {
+            //     user.addEventListener('click', function () {
+            //         const id = this.parentElement.parentElement.id;
+            //         delUser(id);
+            //     });
+            // });
+
+            async function delUser(id) {
+                let req = await fetch(`/users/${id}`, {
+                    method: "DELETE"
+                });
+                let res = await req.json();
+                if (res.errors) {
+                    deleteToast(res.errors.common.msg).showToast();
+                } else {
+                    document.getElementById(id).remove();
+                    document.querySelector('tbody').innerHTML = `<td colspan="3"><h3>There is no user!</h3></td>`;
+                    deleteToast(res.delete).showToast();
+
+                }
+
+            }
+            const deleteToast = (msg) => Toastify({
+                text: msg,
+                duration: 1500,
+            });
+
+        </script>
         </body>
 
         </html>

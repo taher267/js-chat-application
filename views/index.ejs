@@ -7,9 +7,19 @@
         </div>
         <div id="login-form">
             <form method="post" action="/">
-                <input type="text" name="username" placeholder="enter mobile or email" />
-                <p class="error show">Error message here</p>
-                <input type="password" name="password" placeholder="enter password" />
+                <input type="text" name="username" placeholder="enter mobile or email" value="<%=data.username%>"
+                    <%=errors.username?"class=error":""%> />
+                <p class="error<%=errors.username?" show":""%>">
+                    <%=errors.username&&errors.username.msg%>
+                </p>
+                <input type="password" name="password" placeholder="enter password"
+                    <%=errors.password?"class=error":""%> />
+                <p class="error<%=errors.password?" show":""%>">
+                    <%=errors.password&&errors.password.msg%>
+                </p>
+                <p class="error<%=errors.common?" show":""%>">
+                    <%=errors.common&&errors.common.msg%>
+                </p>
                 <input type="submit" value="Login" />
             </form>
         </div>

@@ -1,7 +1,9 @@
+const { unlink } = require('fs');
 const { hash } = require('bcrypt');
 const User = require('../models/people');
-exports.indexUser = (req, res, next) => {
-    res.render('users');
+exports.indexUser = async (req, res, next) => {
+    const users = await User.find();
+    res.render('users', { users });
 }
 
 exports.saveUser = async (req, res, next) => {
@@ -34,7 +36,37 @@ exports.saveUser = async (req, res, next) => {
                 }
             }
         });
-        console.log(err);
     }
 }
 
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndDelete({ _id: req.params.id });
+        //remove avatar
+        if (user.avatar) {
+            unlink(`public/uploads/avatars/${user.avatar}`, (err) => {
+                if (err) {
+                    return res.status(505).json({
+                        errors: {
+                            common: {
+                                msg: err.message
+                            }
+                        }
+                    })
+                }
+            });
+        }
+        return res.status(200).json({
+            delete: "User has been deleted, successfully!"
+        })
+    } catch (err) {
+        return res.status(505).json({
+            errors: {
+                common: {
+                    msg: "Could not delete the user!"
+                }
+            }
+        })
+    }
+}

@@ -92,6 +92,20 @@
             }
         });
 
+        // delete user
+        async function delUser(id) {
+            let req = await fetch(`/users/${id}`, {
+                method: "DELETE",
+            });
+            let res = await req.json();
+            if (res.errors) {
+                successToast(res.errors.common.msg).showToast();
+            } else {
+                successToast(res.delete).showToast();
+                document.querySelector(`#${id}`).remove();
+            }
+        }
+
     }
 
     function closeModal() {
